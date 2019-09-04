@@ -27,19 +27,19 @@ df = pd.DataFrame(
 print(df)
 
 
-def clean(col, df):
+def clean(col):
     """
     :param col: name of column to do cleaning on
     :param df: dataframe
     :return: cleaned dataframe
     """
-    df[col] = df[col].str.replace('[^\w\s]', '')  # remove punctuation
-    df[col] = df[col].str.lower()  # lowercase text
-    df[col] = df[col].apply(''.join)  # join text back together
-    return df
+    col.replace('[^\w\s]', '')  # remove punctuation
+    col.lower()  # lowercase text
+    col.join('')  # join text back together
+    return col
 
 
-df = clean('free_text', df)
+df['free_text'] = df['free_text'].apply(lambda x: clean(x))
 
 """
 Build feature transformers for each of the input columns based on their type or how you want to handle them
@@ -92,7 +92,7 @@ Split the output column from the rest of the data, split train and test data, ch
 X = df.drop('output', axis=1)
 y = df['output']
 
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, random_state=0)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25)
 
 clf.fit(X_train, y_train)
 print("model score: %.3f" % clf.score(X_test, y_test))
